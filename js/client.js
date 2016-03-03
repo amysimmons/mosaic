@@ -6,6 +6,17 @@ function App() {
 	document.getElementById("uploadInput").onchange = function() {
 		loadImage(this);
 	};
+
+	document.getElementById("toggleMosaicBtn").onclick = function(){
+	    if (this.innerHTML=="Show mosaic") {
+	    	this.innerHTML = "Show original";
+	    	renderMosaic();
+	    }
+		else {
+			this.innerHTML = "Show mosaic";
+			renderOriginal();
+		};
+	}
 }
 
 function loadImage(input){
@@ -20,15 +31,42 @@ function loadImage(input){
             canvas.width = img.width;
             canvas.height = img.height;
             ctx.drawImage(img, 0, 0);
+            console.log(ctx.getImageData(50, 50, 100, 100));
+            debugger
         }
         img.src = event.target.result;
         App.image = img;
     };
 
     reader.readAsDataURL(App.file);
+    showToggleButton();
+
 }
 
-function cropImage(){
+function showToggleButton(){
+	document.getElementById("toggleMosaicBtn").className = "show";
+}
+
+function renderMosaic(){
+
+}
+
+
+function sliceImage(){
+
+}
+
+function calculateAverageColor(){
+
+
+}
+
+function fetchMosaicTile(){
+
+
+}
+
+function renderOriginal(){
 
 }
 
