@@ -10,7 +10,7 @@ function App() {
 	document.getElementById("toggleMosaicBtn").onclick = function(){
 	    if (this.innerHTML=="Show mosaic") {
 	    	this.innerHTML = "Show original";
-	    	renderMosaic();
+	    	generateMosaic();
 	    }
 		else {
 			this.innerHTML = "Show mosaic";
@@ -31,8 +31,6 @@ function loadImage(input){
             canvas.width = img.width;
             canvas.height = img.height;
             ctx.drawImage(img, 0, 0);
-            console.log(ctx.getImageData(50, 50, 100, 100));
-            debugger
         }
         img.src = event.target.result;
         App.image = img;
@@ -40,20 +38,51 @@ function loadImage(input){
 
     reader.readAsDataURL(App.file);
     showToggleButton();
-
 }
 
 function showToggleButton(){
 	document.getElementById("toggleMosaicBtn").className = "show";
 }
 
-function renderMosaic(){
-
+function generateMosaic(){
+	App.grid = sliceImage();
+	//get average colour for each tile
+	//fetch new image for each tile
+	//render grid from top to bottom
 }
 
-
 function sliceImage(){
+	var canvas = document.getElementById('photo-mosaic-canvas');
+	var ctx = canvas.getContext('2d');
+	
+	var sx = 0;
+	var sy = 0;
+	var sw = TILE_WIDTH;
+	var sh = TILE_HEIGHT;
+	
+	var id = 0;
+	var grid = [];
 
+	while(sy <= canvas.height){
+		var row = [];
+		while (sx <= canvas.width){
+			var imageData = ctx.getImageData(sx, sy, sw, sh);
+			var tile = {
+				id: id,
+				imageData: imageData,
+				averageColor: null,
+				image: null
+			}
+			row.push(tile);
+			sx += sw;
+			id++;
+		}
+		sy += sh;
+		sx = 0;
+		grid.push(row);
+	}
+	console.log(grid);
+	return grid;
 }
 
 function calculateAverageColor(){
@@ -61,8 +90,12 @@ function calculateAverageColor(){
 
 }
 
-function fetchMosaicTile(){
+function fetchTimeImage(){
 
+
+}
+
+function renderMosaic(){
 
 }
 
