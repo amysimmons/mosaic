@@ -1,2 +1,28 @@
 Photo mosaic
 ------------
+
+ABOUT
+
+Install the server dependencies with setup.sh, then run the server with start.sh.  Those scripts assume a Mac environment, but are trivial enough to replicate on Linux if required.
+
+SOURCES
+
+Uploading a file:
+
+https://developer.mozilla.org/en/docs/Using_files_from_web_applications
+
+Slicing the image:
+
+https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/getImageData
+
+Calculating the average colour:
+
+https://developer.mozilla.org/en/docs/Web/API/ImageData
+
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray
+
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
+
+Converting RGB to HEX:
+
+http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb

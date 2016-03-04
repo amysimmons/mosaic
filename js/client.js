@@ -46,7 +46,7 @@ function showToggleButton(){
 
 function generateMosaic(){
 	App.grid = sliceImage();
-	//get average colour for each tile
+	calculateAverageColors();
 	//fetch new image for each tile
 	//render grid from top to bottom
 }
@@ -81,13 +81,62 @@ function sliceImage(){
 		sx = 0;
 		grid.push(row);
 	}
-	console.log(grid);
 	return grid;
 }
 
-function calculateAverageColor(){
+function calculateAverageColors(){
+	var grid = App.grid;
+
+	for (var i = 0; i < grid.length; i++) {
+		
+		var row = grid[i];
+
+		for (var j = 0; j < row.length; j++) {
+
+			var tile = row[j];
+
+			var r = [];
+			var g = [];
+			var b = [];
+			var a = [];
+
+			for (var k = 0; k < tile.imageData.data.length; k += 4) {
+				
+				r.push(tile.imageData.data[k]);
+				g.push(tile.imageData.data[k + 1]);
+				b.push(tile.imageData.data[k + 2]);
+				a.push(tile.imageData.data[k + 3]);
+
+			};
+
+			var rSum = r.reduce(function(a, b) { return a + b; });
+			var rAvg = Math.floor(rSum/r.length);
+
+			var gSum = g.reduce(function(a, b) { return a + b; });
+			var gAvg = Math.floor(gSum/g.length);
+
+			var bSum = b.reduce(function(a, b) { return a + b; });
+			var bAvg = Math.floor(bSum/b.length);
+
+			var aSum = a.reduce(function(a, b) { return a + b; });
+			var aAvg = Math.floor(aSum/a.length);
 
 
+			function componentToHex(c) {
+			    var hex = c.toString(16);
+			    return hex.length == 1 ? "0" + hex : hex;
+			}
+
+			function rgbToHex(r, g, b) {
+			    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+			}
+
+			tile.averageColor = rgbToHex(rAvg, gAvg, bAvg);
+
+		};
+
+	};
+	
 }
 
 function fetchTimeImage(){
