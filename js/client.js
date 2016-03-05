@@ -47,8 +47,7 @@ function showToggleButton(){
 function generateMosaic(){
 	App.grid = sliceImage();
 	calculateAverageColors();
-	fetchTileImages();
-	//fetch new image for each tile
+	fetchTiles();
 	//render grid from top to bottom
 }
 
@@ -139,38 +138,17 @@ function calculateAverageColors(){
 	
 }
 
-function fetchTileImages(){
-
+function fetchTiles(){
 	for (var i = 0; i < App.grid.length; i++) {
 		
 		var row = App.grid[i];
 
 		row.map(function(tile){
-
 			var hex = tile.averageColor;
-			var url = `/color/${hex}`;
-
-			var xhttp;
-
-		    if (window.XMLHttpRequest) {
-		        // code for IE7+, Firefox, Chrome, Opera, Safari
-		        xhttp = new XMLHttpRequest();
-		    } else {
-		        // code for IE6, IE5
-		        xhttp = new ActiveXObject("Microsoft.XMLHTTP");
-		    }
-
-			xhttp.onreadystatechange = function() {
-			  if (xhttp.readyState == 4 && xhttp.status == 200) {
-
-			       	tile.image = xhttp.responseText;
-				    console.log(xhttp);
-			  }
-			};
-
-			xhttp.open("GET", url, true);
-			xhttp.send();
-
+			var src = `/color/${hex}`;
+			var image = document.createElement('img');
+			image.src = src;
+			tile.image = image;
 		});
 
 	};
