@@ -42,3 +42,7 @@ https://github.com/Homebrew/homebrew/issues/11184
 Promises:
 
 https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise
+
+Canvas offscreen rendering:
+
+http://devbutze.blogspot.com.au/2014/02/html5-canvas-offscreen-rendering.html

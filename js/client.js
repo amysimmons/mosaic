@@ -21,7 +21,7 @@ function App() {
 
 function loadImage(input){
 	App.file = input.files[0];
-	var canvas = document.getElementById('photo-mosaic-canvas');
+	var canvas = document.getElementById('photo-canvas');
 	var ctx = canvas.getContext('2d');
    	var reader = new FileReader();
 
@@ -48,11 +48,11 @@ function generateMosaic(){
 	App.grid = sliceImage();
 	calculateAverageColors();
 	fetchTiles();
-	//render grid from top to bottom
+	renderMosaic();
 }
 
 function sliceImage(){
-	var canvas = document.getElementById('photo-mosaic-canvas');
+	var canvas = document.getElementById('photo-canvas');
 	var ctx = canvas.getContext('2d');
 	
 	var sx = 0;
@@ -60,7 +60,6 @@ function sliceImage(){
 	var sw = TILE_WIDTH;
 	var sh = TILE_HEIGHT;
 	
-	var id = 0;
 	var grid = [];
 
 	while(sy <= canvas.height){
@@ -68,14 +67,16 @@ function sliceImage(){
 		while (sx <= canvas.width){
 			var imageData = ctx.getImageData(sx, sy, sw, sh);
 			var tile = {
-				id: id,
 				imageData: imageData,
 				averageColor: null,
-				image: null
+				image: null,
+				sx: sx,
+				sy: sy,
+				sw: sw,
+				sh: sh
 			}
 			row.push(tile);
 			sx += sw;
-			id++;
 		}
 		sy += sh;
 		sx = 0;
@@ -150,12 +151,45 @@ function fetchTiles(){
 			image.src = src;
 			tile.image = image;
 		});
-
 	};
 }
 
 function renderMosaic(){
 
+	var canvas = document.getElementById('mosaic-canvas');
+	canvas.width = 500;
+	canvas.height = 500;
+	var ctx = canvas.getContext('2d');
+
+	debugger
+	var row = App.grid[0];
+	var offscreenRow = renderRowOffscreen(row);
+		ctx.drawImage(offscreenRow, 0, 0);
+
+
+
+	// for (var i = 0; i < App.grid.length; i++) {
+	// 	var row = App.grid[0];
+	// 	var offscreenRow = renderRowOffscreen(row);
+	// 	debugger
+	// 	//position to be changed to dynamic
+	// 	ctx.drawImage(offscreenRow, 0, 0);
+
+	// };
+}
+
+function renderRowOffscreen(row){
+    var offscreenCanvas = document.createElement('canvas');
+    offscreenCanvas.width = row.length * TILE_WIDTH;
+    offscreenCanvas.height = TILE_HEIGHT;
+    var context = offscreenCanvas.getContext('2d');
+    
+    for (var i = 0; i < row.length; i++) {
+    	var tile = row[i];
+    	 context.drawImage(tile.image, tile.sx, 0, tile.sw, tile.sh);
+    };
+
+    return offscreenCanvas;
 }
 
 function renderOriginal(){
