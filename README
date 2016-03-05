@@ -3,7 +3,7 @@ Photo mosaic
 
 ABOUT
 
-Install the server dependencies with setup.sh, then run the server with start.sh.  Those scripts assume a Mac environment, but are trivial enough to replicate on Linux if required.
+Install the server dependencies with setup.sh, then run the server with start.sh.  Those scripts assume a Mac environment.
 
 SOURCES
 
@@ -26,3 +26,19 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
 Converting RGB to HEX:
 
 http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
+
+Making ajax request:
+
+http://www.w3schools.com/ajax/ajax_xmlhttprequest_send.asp
+
+http://stackoverflow.com/questions/8567114/how-to-make-an-ajax-call-without-jquery
+
+Brew link:
+
+https://github.com/Homebrew/homebrew/issues/11427
+
+https://github.com/Homebrew/homebrew/issues/11184
+
+Promises:
+
+https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise

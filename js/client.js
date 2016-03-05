@@ -47,6 +47,7 @@ function showToggleButton(){
 function generateMosaic(){
 	App.grid = sliceImage();
 	calculateAverageColors();
+	fetchTileImages();
 	//fetch new image for each tile
 	//render grid from top to bottom
 }
@@ -121,14 +122,13 @@ function calculateAverageColors(){
 			var aSum = a.reduce(function(a, b) { return a + b; });
 			var aAvg = Math.floor(aSum/a.length);
 
-
 			function componentToHex(c) {
 			    var hex = c.toString(16);
 			    return hex.length == 1 ? "0" + hex : hex;
 			}
 
 			function rgbToHex(r, g, b) {
-			    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+			    return componentToHex(r) + componentToHex(g) + componentToHex(b);
 			}
 
 			tile.averageColor = rgbToHex(rAvg, gAvg, bAvg);
@@ -139,9 +139,41 @@ function calculateAverageColors(){
 	
 }
 
-function fetchTimeImage(){
+function fetchTileImages(){
 
+	for (var i = 0; i < App.grid.length; i++) {
+		
+		var row = App.grid[i];
 
+		row.map(function(tile){
+
+			var hex = tile.averageColor;
+			var url = `/color/${hex}`;
+
+			var xhttp;
+
+		    if (window.XMLHttpRequest) {
+		        // code for IE7+, Firefox, Chrome, Opera, Safari
+		        xhttp = new XMLHttpRequest();
+		    } else {
+		        // code for IE6, IE5
+		        xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		    }
+
+			xhttp.onreadystatechange = function() {
+			  if (xhttp.readyState == 4 && xhttp.status == 200) {
+
+			       	tile.image = xhttp.responseText;
+				    console.log(xhttp);
+			  }
+			};
+
+			xhttp.open("GET", url, true);
+			xhttp.send();
+
+		});
+
+	};
 }
 
 function renderMosaic(){
