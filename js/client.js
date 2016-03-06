@@ -60,23 +60,27 @@ function sliceImage(){
 	var sw = TILE_WIDTH;
 	var sh = TILE_HEIGHT;
 	
+	var id = 0;
 	var grid = [];
 
 	while(sy <= canvas.height){
-		var row = [];
+		var row = {className: "row hide", tiles: []};
 		while (sx <= canvas.width){
 			var imageData = ctx.getImageData(sx, sy, sw, sh);
 			var tile = {
+				id: id,
 				imageData: imageData,
 				averageColor: null,
 				image: null,
 				sx: sx,
 				sy: sy,
 				sw: sw,
-				sh: sh
+				sh: sh,
+				loaded: false
 			}
-			row.push(tile);
+			row.tiles.push(tile);
 			sx += sw;
+			id++;
 		}
 		sy += sh;
 		sx = 0;
@@ -90,7 +94,7 @@ function calculateAverageColors(){
 
 	for (var i = 0; i < grid.length; i++) {
 		
-		var row = grid[i];
+		var row = grid[i].tiles;
 
 		for (var j = 0; j < row.length; j++) {
 
@@ -144,13 +148,18 @@ function fetchTiles(){
 		
 		var row = App.grid[i];
 
-		row.map(function(tile){
+		row.tiles.map(function(tile){
 			var hex = tile.averageColor;
 			var src = `/color/${hex}`;
 			var image = document.createElement('img');
 			image.src = src;
-			//image.width = tile.sw;
-			//image.height = tile.sh;
+			image.id=tile.id;
+			image.onload=function(){
+				image.className="loaded"; 
+				tile.loaded=true; 
+				console.log('heya loaded')
+				checkIfRowLoaded(tile);
+			}
 			tile.image = image;
 		});
 	};
@@ -158,40 +167,75 @@ function fetchTiles(){
 
 function renderMosaic(){
 
-	var row = App.grid[0];
- 	renderRowOffscreen(row, renderRowOnscreen);
+	var container = document.getElementById('mosaic-container');
+
+	for (var i = 0; i < App.grid.length; i++) {
+			
+		var row = App.grid[i];
+		var tiles = App.grid[i].tiles
+		var div = document.createElement('div')
+		div.className = row.className;
+	
+		for (var j = 0; j < tiles.length; j++) {
+			var tile = tiles[j];
+			div.appendChild(tile.image);
+		};
+	
+		container.appendChild(div);	
+
+	};
+
  }
 
-function renderRowOnscreen(offscreenCanvas){
-	var onscreenCanvas = document.getElementById('mosaic-canvas');
-	var onscreenContext = onscreenCanvas.getContext('2d');
+ function checkIfRowLoaded(tile){
 
-	var offscreenContext = offscreenCanvas.getContext('2d');
+	function getRow(tile){
 
-	var image = offscreenContext.getImageData(0,0,offscreenCanvas.width,offscreenCanvas.height); 
+		var rows = document.getElementsByClassName('row');
 
-	onscreenCanvas.width = image.width;
-	onscreenCanvas.height = image.height;
-	onscreenContext.putImageData(image, 0,0);
+		for (var i = 0; i < App.grid.length; i++) {
+			var row = App.grid[i];
+			var tileIds = row.tiles.map(function(tile){return tile.id});
+
+			if(tileIds.indexOf(tile.id) >= 0){
+				console.log('row returned')
+				return row;
+			}
+
+		};
+	}
+
+	function getDomRow(tile){
+
+		var rows = document.getElementsByClassName('row');
+
+		var domRow = null;
+
+		for (var i = 0; i < rows.length; i++) {
+			var row = rows[i];
+			for (var x = 0; x < row.childNodes.length; x++){
+			    if (row.childNodes[x].id == tile.id) {
+			    	domRow = row;
+			    }      
+			}
+		}
+		return domRow;
+	}
+
+	var row = getRow(tile);
+	var domRow = getDomRow(tile);
+
+	var loadValues = row.tiles.map(function(tile){return tile.loaded});
+
+	if (loadValues.indexOf(false) == [-1]){
+		console.log('show class here1!!')
+		row.className = "row show";
+		if (domRow != undefined) {
+			domRow.className = "row show";
+		}
+ 	}  
+
 }
-
-function renderRowOffscreen(row, renderRowOnscreen){
-
-	var offscreenCanvas = document.createElement('canvas');
-	var offscreenContext = offscreenCanvas.getContext('2d');
-
-	var tile = row[0];
-	var xPos = tile.sx;
-	var image = tile.image;
-
-	image.onload = function(){
-		offscreenCanvas.width = row.length * TILE_WIDTH;
-		offscreenCanvas.height = TILE_HEIGHT;
-		offscreenContext.drawImage(image, xPos, 0);
-		renderRowOnscreen(offscreenCanvas)
-	};
-	
-};
 
 function renderOriginal(){
 
@@ -201,22 +245,4 @@ function renderOriginal(){
 document.addEventListener("DOMContentLoaded", function(event) { 
 	var app = new App();
 });
-
-
-/*
-
-
-           
- var onscreenCanvas = document.getElementById('mosaic-canvas')
- var ctx = onscreenCanvas.getContext('2d');
- var tile = App.grid[0][0];
- var image = tile.image;
-
- image.onload = function(){
-  onscreenCanvas.width = image.width;
-  onscreenCanvas.height = image.height;
-   ctx.drawImage(image, 0,0);
- }
-
-*/
 	
