@@ -149,6 +149,8 @@ function fetchTiles(){
 			var src = `/color/${hex}`;
 			var image = document.createElement('img');
 			image.src = src;
+			//image.width = tile.sw;
+			//image.height = tile.sh;
 			tile.image = image;
 		});
 	};
@@ -156,47 +158,65 @@ function fetchTiles(){
 
 function renderMosaic(){
 
-	var canvas = document.getElementById('mosaic-canvas');
-	canvas.width = 500;
-	canvas.height = 500;
-	var ctx = canvas.getContext('2d');
-
-	debugger
 	var row = App.grid[0];
-	var offscreenRow = renderRowOffscreen(row);
-		ctx.drawImage(offscreenRow, 0, 0);
+ 	renderRowOffscreen(row, renderRowOnscreen);
+ }
 
+function renderRowOnscreen(offscreenCanvas){
+	var onscreenCanvas = document.getElementById('mosaic-canvas');
+	var onscreenContext = onscreenCanvas.getContext('2d');
 
+	var offscreenContext = offscreenCanvas.getContext('2d');
 
-	// for (var i = 0; i < App.grid.length; i++) {
-	// 	var row = App.grid[0];
-	// 	var offscreenRow = renderRowOffscreen(row);
-	// 	debugger
-	// 	//position to be changed to dynamic
-	// 	ctx.drawImage(offscreenRow, 0, 0);
+	var image = offscreenContext.getImageData(0,0,offscreenCanvas.width,offscreenCanvas.height); 
 
-	// };
+	onscreenCanvas.width = image.width;
+	onscreenCanvas.height = image.height;
+	onscreenContext.putImageData(image, 0,0);
 }
 
-function renderRowOffscreen(row){
-    var offscreenCanvas = document.createElement('canvas');
-    offscreenCanvas.width = row.length * TILE_WIDTH;
-    offscreenCanvas.height = TILE_HEIGHT;
-    var context = offscreenCanvas.getContext('2d');
-    
-    for (var i = 0; i < row.length; i++) {
-    	var tile = row[i];
-    	 context.drawImage(tile.image, tile.sx, 0, tile.sw, tile.sh);
-    };
+function renderRowOffscreen(row, renderRowOnscreen){
 
-    return offscreenCanvas;
-}
+	var offscreenCanvas = document.createElement('canvas');
+	var offscreenContext = offscreenCanvas.getContext('2d');
+
+	var tile = row[0];
+	var xPos = tile.sx;
+	var image = tile.image;
+
+	image.onload = function(){
+		offscreenCanvas.width = row.length * TILE_WIDTH;
+		offscreenCanvas.height = TILE_HEIGHT;
+		offscreenContext.drawImage(image, xPos, 0);
+		renderRowOnscreen(offscreenCanvas)
+	};
+	
+};
 
 function renderOriginal(){
+
 
 }
 
 document.addEventListener("DOMContentLoaded", function(event) { 
 	var app = new App();
 });
+
+
+/*
+
+
+           
+ var onscreenCanvas = document.getElementById('mosaic-canvas')
+ var ctx = onscreenCanvas.getContext('2d');
+ var tile = App.grid[0][0];
+ var image = tile.image;
+
+ image.onload = function(){
+  onscreenCanvas.width = image.width;
+  onscreenCanvas.height = image.height;
+   ctx.drawImage(image, 0,0);
+ }
+
+*/
 	
