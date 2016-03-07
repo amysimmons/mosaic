@@ -64,7 +64,7 @@ function slicePhoto(){
 	var sh = TILE_HEIGHT;
 	
 	while(sy <= canvas.height){
-		var row = {tiles: [], className: "row hide"};
+		var row = {tiles: [], visible: false};
 		while (sx <= canvas.width){
 			var imageData = ctx.getImageData(sx, sy, sw, sh);
 			var tile = {
@@ -134,7 +134,6 @@ function generateMosaicPieces(){
 			img.id = tile.id;
 
 			img.onload=function(){
-				img.className = "loaded"; 
 				tile.loaded = true; 
 				checkIfRowLoaded(tile);
 			}
@@ -144,7 +143,7 @@ function generateMosaicPieces(){
 	};
 }
 
-//renders the mosaic in the browser
+//renders the hidden mosaic in the browser
 function renderMosaic(){
 	var container = document.getElementById('mosaic-container');
 	for (var i = 0; i < App.grid.length; i++) {	
@@ -153,7 +152,7 @@ function renderMosaic(){
 		var tiles = App.grid[i].tiles;
 
 		var div = document.createElement('div');
-		div.className = row.className;
+		div.className = "row hide";
 	
 		for (var j = 0; j < tiles.length; j++) {
 			var tile = tiles[j];
@@ -172,11 +171,12 @@ function checkIfRowLoaded(tile){
 	var loadValues = row.tiles.map(function(tile){return tile.loaded});
 
 	if (loadValues.indexOf(false) == [-1]){
-		row.className = "row show";
+		row.visible = true;
 		domRow.className = "row show";
 	}
 }
 
+//gets the row in App.grid for a particular tile
 function getRow(tile){
 	var rows = document.getElementsByClassName('row');
 
@@ -185,16 +185,15 @@ function getRow(tile){
 		var tileIds = row.tiles.map(function(tile){return tile.id});
 
 		if(tileIds.indexOf(tile.id) >= 0){
-			console.log('row returned')
 			return row;
 		}
 	};
 }
 
+//gets the row in the dom for a particular tile
 function getDomRow(tile){
 	var rows = document.getElementsByClassName('row');
-
-	var domRow = null;
+	var domRow;
 
 	for (var i = 0; i < rows.length; i++) {
 		var row = rows[i];
@@ -207,6 +206,7 @@ function getDomRow(tile){
 	return domRow;
 }
 
+//renders the original photo
 function renderOriginal(){
 
 }
