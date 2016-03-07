@@ -63,9 +63,9 @@ function slicePhoto(){
 	var sw = TILE_WIDTH;
 	var sh = TILE_HEIGHT;
 	
-	while(sy <= canvas.height){
+	while(sy <= canvas.height - sh){
 		var row = {tiles: [], visible: false};
-		while (sx <= canvas.width){
+		while (sx <= canvas.width - sw){
 			var imageData = ctx.getImageData(sx, sy, sw, sh);
 			var tile = {
 				id: id,
@@ -210,7 +210,7 @@ function getDomRow(tile){
 function renderOriginal(){
 	var rows = document.getElementsByClassName('row');
 	var i = rows.length-1;  
-              
+
 	function myLoop () {  
 		var row = rows[i]  
 		setTimeout(function () {    
