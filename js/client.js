@@ -143,7 +143,7 @@ function generateMosaicPieces(){
 	};
 }
 
-//renders the hidden mosaic in the browser
+//renders the hidden mosaic in the browser from top to bottom
 function renderMosaic(){
 	var container = document.getElementById('mosaic-container');
 	for (var i = 0; i < App.grid.length; i++) {	
@@ -206,10 +206,24 @@ function getDomRow(tile){
 	return domRow;
 }
 
-//renders the original photo
+//renders the original photo removing rows from bottom to top
 function renderOriginal(){
+	var rows = document.getElementsByClassName('row');
+	var i = rows.length-1;  
+              
+	function myLoop () {  
+		var row = rows[i]  
+		setTimeout(function () {    
+			row.className = "row hide";          
+			i--;                    
+			if (i >= 0) {            
+		 		myLoop();
+			}
+		}, 200)
+	}
 
-}
+	myLoop(); 
+}	
 
 document.addEventListener("DOMContentLoaded", function(event) { 
 	var app = new App();
