@@ -227,6 +227,7 @@ function renderOriginal(){
 	}
 
 	myLoop(); 
+	
 }	
 
 document.addEventListener("DOMContentLoaded", function(event) { 

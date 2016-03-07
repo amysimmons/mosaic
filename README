@@ -46,3 +46,7 @@ https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Pr
 Canvas offscreen rendering:
 
 http://devbutze.blogspot.com.au/2014/02/html5-canvas-offscreen-rendering.html
+
+SetTimeout Loops:
+
+http://stackoverflow.com/questions/3583724/how-do-i-add-a-delay-in-a-javascript-loop
