@@ -3,15 +3,41 @@
 <head>
 <!--I would not normally include my styles like this :)-->
 <style>
+	body{
+		margin: 0;
+	}
 	.show {
 		display: visible;
 	}
 	.hide  {
 		display: none;
 	}
+	.app-container{
+
+	}
+	.image-controls{
+		width: 100%;
+
+	}
+	.image-controls div{
+		display: inline-block;
+	}
+	.image-container{
+		position: relative; 
+		left: 0; 
+		top: 0
+	}
+	#photo-canvas{
+		position: relative; 
+		top: 0; 
+		left: 0;
+	}
 	#mosaic-container{
 		font-size: 0;
 		background-color: #fff;
+		position: absolute;
+		top: 0;
+		left: 0;
 	}
 </style>
 <script type="text/javascript" src="js/mosaic.js"></script>
@@ -20,10 +46,14 @@
 </head>
 <body>
 	<div class="app-container">
-		<div><input id="uploadInput" type="file" name="pic" accept="image/*"></div>
-		<button id="toggleMosaicBtn" class="hide">Show mosaic</button>
-		<canvas id="photo-canvas" width="0" height="0"></canvas>	
-		<div id="mosaic-container"></div>		
+		<div class="image-controls">
+			<div><input id="uploadInput" type="file" name="pic" accept="image/*"></div>
+			<div><button id="toggleMosaicBtn" class="hide">Show mosaic</button></div>
+		</div>
+		<div class="image-container">
+			<canvas id="photo-canvas" width="0" height="0"></canvas>	
+			<div id="mosaic-container"></div>
+		</div>
 	</div>
 </body>
 </html>
