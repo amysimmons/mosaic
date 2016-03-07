@@ -28,6 +28,10 @@ function loadImage(input){
 	reader.onload = function(e){
 		var img = new Image();
 		img.onload = function(){
+			//resizes the image to have a width a multiple of the tile width, so mosaic and original are same size
+			img.width = Math.floor(img.width/TILE_WIDTH)*TILE_WIDTH;
+			//resizes the image to have a height a multiple of the tile height
+			img.height = Math.floor(img.height/TILE_HEIGHT)*TILE_HEIGHT;
 			canvas.width = img.width;
 			canvas.height = img.height;
 			ctx.drawImage(img, 0, 0);
