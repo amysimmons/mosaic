@@ -3,6 +3,10 @@ Photo mosaic
 
 ABOUT
 
+Allows a user to upload a photo, and renders the photo as a mosaic one row a time.
+
+Note: I did not write server.js
+
 Install the server dependencies with setup.sh, then run the server with start.sh.  Those scripts assume a Mac environment.
 
 SOURCES
